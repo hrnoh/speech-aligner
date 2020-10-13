@@ -37,11 +37,12 @@ def make_metadata(audio_path, txt_path, output_path, sep='|', use_spks=None):
 
 if __name__=='__main__':
     p = argparse.ArgumentParser()
-    p.add_argument('--audio', type=str, default='data\\VCTK\\wav48')
-    p.add_argument('--text', type=str, default='data\\VCTK\\txt')
-    p.add_argument('--output', type=str, default='data\\VCTK\\')
+    p.add_argument('--audio', type=str, default='/hd0/dataset/VCTK/VCTK-Corpus/wav48')
+    p.add_argument('--text', type=str, default='/hd0/dataset/VCTK/VCTK-Corpus/txt')
+    p.add_argument('--output', type=str, default='/hd0/speech-aligner/metadata')
     p.add_argument('--sep', type=str, default='|')
-    p.add_argument('--use_spks', type=list, default=['p226', 'p301'])
+    p.add_argument('--use_spks', type=list, default=["p{}".format(i) for i in [226, 227, 232, 254, 256, 258, 259, 270, 273, 274, 228, 229, 230, 231, 233, 236, 239, 240, 244, 250]])
+
     args = p.parse_args()
 
     make_metadata(args.audio, args.text, args.output, args.sep, args.use_spks)

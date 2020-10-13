@@ -188,7 +188,7 @@ def main(args):
     
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    p.add_argument('--gpu', type=str, default='0,1')
+    p.add_argument('--gpu', type=str, default='1') # '0, 1'
     p.add_argument('-v', '--verbose', type=str, default='0')
     p.add_argument('--stage', type=int, required=True)
     p.add_argument('--log_viterbi', type=bool, default=False)

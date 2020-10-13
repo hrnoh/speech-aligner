@@ -7,23 +7,23 @@ seed=1234
 n_gpus=2
 output_directory = 'training_log'
 log_directory = 'aligntts'
-data_path = 'data\\preprocessed'
+data_path = '/hd0/speech-aligner/preprocessed/VCTK20_engspks'
 
-training_files='data\\VCTK\\metadata.csv'
-validation_files='data\\VCTK\\metadata.csv'
+training_files='/hd0/speech-aligner/metadata/metadata.csv'
+validation_files='/hd0/speech-aligner/metadata/metadata_val.csv'
 text_cleaners=['english_cleaners']
 
 
 ################################
 # Audio Parameters             #
 ################################
-sampling_rate=22050
+sampling_rate=16000
 filter_length=1024
 hop_length=256
 win_length=1024
 n_mel_channels=80
-mel_fmin=0
-mel_fmax=8000.0
+mel_fmin=55
+mel_fmax=7600.0
 
 ################################
 # Model Parameters             #

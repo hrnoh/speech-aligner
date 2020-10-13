@@ -19,9 +19,9 @@ from layers import TacotronSTFT
 symbol_to_id = {s: i for i, s in enumerate(symbols)}
 id_to_symbol = {i: s for i, s in enumerate(symbols)}
 
-csv_file = 'data\\VCTK\\metadata.csv'
-root_dir = 'data\\VCTK\\wav48'
-data_dir = 'data\\preprocessed'
+csv_file = '/hd0/speech-aligner/metadata/metadata.csv'
+root_dir = '/hd0/dataset/VCTK/VCTK-Corpus/wav48'
+data_dir = '/hd0/speech-aligner/preprocessed/VCTK20_engspks'
 
 os.makedirs(data_dir, exist_ok=True)
 os.makedirs(os.path.join(data_dir, 'char_seq'), exist_ok=True)
@@ -84,7 +84,7 @@ def save_file(fname):
             os.path.isfile(os.path.join(data_dir, 'melspectrogram', f'{fname}_melspectrogram.npy')):
         return text, char_seq, phone_seq, melspec, wav
 
-    spk_name = fname.split('\\')[0]
+    spk_name = fname[:4]
     os.makedirs(os.path.join(data_dir, 'char_seq', spk_name), exist_ok=True)
     os.makedirs(os.path.join(data_dir, 'phone_seq', spk_name), exist_ok=True)
     os.makedirs(os.path.join(data_dir, 'melspectrogram', spk_name), exist_ok=True)
@@ -99,7 +99,7 @@ mel_values = []
 for k in tqdm(metadata.keys()):
     text, char_seq, phone_seq, melspec, wav = save_file(k)
     mel_values.extend(list(melspec.reshape(-1)))
-    if k == 'p226\\p226_001':
+    if k == 'p226/p226_001':
         print("Text:")
         print(text)
         print()
