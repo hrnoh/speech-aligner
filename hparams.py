@@ -11,7 +11,8 @@ data_path = '/hd0/speech-aligner/preprocessed/VCTK20_engspks'
 
 training_files='/hd0/speech-aligner/metadata/metadata.csv'
 validation_files='/hd0/speech-aligner/metadata/metadata_val.csv'
-text_cleaners=['english_cleaners']
+cleaners=['custom_english_cleaners'] # 'english_cleaners', 'korean_cleaners', 'custom_english_cleaners'
+use_phoneme=True
 
 
 ################################
@@ -28,7 +29,7 @@ mel_fmax=7600.0
 ################################
 # Model Parameters             #
 ################################
-n_symbols=len(symbols)
+n_symbols=len(symbols.en_symbols)
 data_type='phone_seq' # 'phone_seq'
 symbols_embedding_dim=256
 hidden_dim=256

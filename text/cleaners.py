@@ -12,6 +12,7 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
 """
 
 import re
+from .korean import tokenize as ko_tokenize
 
 from unidecode import unidecode
 
@@ -19,6 +20,11 @@ from text.numbers import normalize_numbers
 
 # Regular expression matching whitespace:
 _whitespace_re = re.compile(r'\s+')
+
+def korean_cleaners(text):
+    '''Pipeline for Korean text, including number and abbreviation expansion.'''
+    text = ko_tokenize(text) # '존경하는' --> ['ᄌ', 'ᅩ', 'ᆫ', 'ᄀ', 'ᅧ', 'ᆼ', 'ᄒ', 'ᅡ', 'ᄂ', 'ᅳ', 'ᆫ', '~']
+    return text
 
 # List of (regular expression, replacement) pairs for abbreviations:
 _abbreviations = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in [
@@ -117,9 +123,9 @@ def custom_english_cleaners(text):
     text = lowercase(text)
     text = expand_numbers(text)
     text = expand_abbreviations(text)
-    text = expand_symbols(text)
-    text = remove_unnecessary_symbols(text)
-    text = uppercase(text)
+    text = expand_symbols(text) # 추가
+    text = remove_unnecessary_symbols(text) # 추가
+    text = uppercase(text) # 추가
     text = collapse_whitespace(text)
     
     # There is an exception (I found it!)

@@ -7,7 +7,6 @@ warnings.filterwarnings("ignore")
 import sys
 sys.path.append('waveglow/')
 
-import IPython.display as ipd
 import pickle as pkl
 import torch
 import torch.nn.functional as F
@@ -15,13 +14,14 @@ import hparams
 from torch.utils.data import DataLoader
 from modules.model import Model
 from text import text_to_sequence, sequence_to_text
-from denoiser import Denoiser
+#from denoiser import Denoiser
 from tqdm import tqdm
 import librosa
 from modules.loss import MDNLoss
 import math
 import numpy as np
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 def main():
     data_type = 'phone'
@@ -36,11 +36,13 @@ def main():
     _ = model.cuda().eval()
     criterion = MDNLoss()
 
-    datasets = ['train', 'val', 'test']
+    #datasets = ['train', 'val', 'test']
+    datasets = ['train']
     batch_size=64
 
     for dataset in datasets:
-        with open(f'filelists/ljs_audio_text_{dataset}_filelist.txt', 'r') as f:
+        #with open(f'filelists/ljs_audio_text_{dataset}_filelist.txt', 'r') as f:
+        with open(f'/hd0/speech-aligner/metadata/metadata.csv', 'r') as f:
             lines_raw = [line.split('|') for line in f.read().splitlines()]
             lines_list = [ lines_raw[batch_size*i:batch_size*(i+1)] 
                           for i in range(len(lines_raw)//batch_size+1)]
@@ -51,10 +53,11 @@ def main():
 
             for i in range(len(batch)):
                 file_name, _, text = batch[i]
+                file_name = os.path.splitext(file_name)[0]
                 file_list.append(file_name)
-                seq = os.path.join('../Dataset/LJSpeech-1.1/preprocessed',
+                seq = os.path.join('/hd0/speech-aligner/preprocessed/VCTK20_engspks',
                                    f'{data_type}_seq')
-                mel = os.path.join('../Dataset/LJSpeech-1.1/preprocessed',
+                mel = os.path.join('/hd0/speech-aligner/preprocessed/VCTK20_engspks',
                                    'melspectrogram')
 
                 seq = torch.from_numpy(np.load(f'{seq}/{file_name}_sequence.npy'))
@@ -91,15 +94,20 @@ def main():
 
             for j, (l, t) in enumerate(zip(text_lengths, mel_lengths)):
                 alignments[j] = alignments[j][0, :l.item(), :t.item()].sum(dim=-1)
-                np.save(f'../Dataset/LJSpeech-1.1/preprocessed/alignments/{file_list[j]}_alignment.npy',
+                os.makedirs(
+                    "/hd0/speech-aligner/preprocessed/VCTK20_engspks/alignments/{}".format(file_list[j].split('/')[0]), exist_ok=True)
+                np.save(f'/hd0/speech-aligner/preprocessed/VCTK20_engspks/alignments/{file_list[j]}_alignment.npy',
                         alignments[j].detach().cpu().numpy())
+                # plt.imshow(align[j].detach().cpu().numpy())
+                # plt.gca().invert_yaxis()
+                # plt.savefig(f"/hd0/speech-aligner/preprocessed/VCTK20_engspks/alignments/{file_list[j]}_alignment.png", format='png')
             
     print("Alignments Extraction End!!! ({datetime.now()})")
           
         
 if __name__ == '__main__':
     p = argparse.ArgumentParser()
-    p.add_argument('--gpu', type=str, default='0')
+    p.add_argument('--gpu', type=str, default='1')
     p.add_argument('-v', '--verbose', type=str, default='0')
     args = p.parse_args()
     

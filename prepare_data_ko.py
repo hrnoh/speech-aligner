@@ -8,7 +8,7 @@ import codecs
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-from g2p_en import G2p
+from g2pk import G2p
 from text import *
 from text import cmudict
 from text.cleaners import custom_english_cleaners
@@ -59,7 +59,7 @@ def text2seq(text):
 
 def get_mel(filename):
     wav, sr = librosa.load(filename, sr=16000)
-    wav, _ = librosa.effects.trim(wav, top_db=20, frame_length=1024, hop_length=256)
+    wav = librosa.effects.trim(wav, top_db=20, frame_length=1024, hop_length=256)[0]
 
     wav = torch.FloatTensor(wav.astype(np.float32))
     melspec = stft.mel_spectrogram(wav.unsqueeze(0))

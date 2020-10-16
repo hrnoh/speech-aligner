@@ -80,13 +80,13 @@ def griffin_lim(magnitudes, stft_fn, n_iters=30):
     return signal
 
 
-def dynamic_range_compression(x, C=1, clip_val=1e-5):
+def dynamic_range_compression(x, C=1, clip_val=1e-2):
     """
     PARAMS
     ------
     C: compression factor
     """
-    return torch.log(torch.clamp(x, min=clip_val) * C)
+    return torch.log10(torch.clamp(x, min=clip_val) * C)
 
 
 def dynamic_range_decompression(x, C=1):
