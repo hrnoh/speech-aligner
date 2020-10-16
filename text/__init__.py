@@ -7,7 +7,7 @@ from g2p_en import G2p
 from g2pk import G2p as G2pk
 from text import cleaners
 import hparams
-from text.symbols import symbols, en_symbols, PAD, EOS
+from text.symbols import symbols, en_phone_symbols, en_symbols, PAD, EOS
 from text.korean import jamo_to_korean
 
 # Mappings from symbol to numeric ID and vice versa:
@@ -36,6 +36,17 @@ def convert_to_en_symbols():
     _id_to_symbol = {i: s for i, s in enumerate(en_symbols)}
     isEn = True
 
+def convert_to_en_phone_symbols():
+    '''Converts built-in korean symbols to english, to be used for english training
+
+'''
+    global _symbol_to_id, _id_to_symbol, isEn
+    if not isEn:
+        print(" [!] Converting to english phoneme mode")
+    _symbol_to_id = {s: i for i, s in enumerate(en_phone_symbols)}
+    _id_to_symbol = {i: s for i, s in enumerate(en_phone_symbols)}
+    isEn = True
+
 
 def remove_puncuations(text):
     return text.translate(puncuation_table)
@@ -44,7 +55,10 @@ def remove_puncuations(text):
 def text_to_sequence(text, as_token=False):
     cleaner_names = [x.strip() for x in hparams.cleaners]
     if ('english_cleaners' in cleaner_names or 'custom_english_cleaners' in cleaner_names) and isEn == False:
-        convert_to_en_symbols()
+        if hparams.use_phoneme:
+            convert_to_en_phone_symbols()
+        else:
+            convert_to_en_symbols()
     return _text_to_sequence(text, cleaner_names, as_token)
 
 
@@ -166,7 +180,7 @@ if __name__=='__main__':
     #     sequence.append(_symbol_to_id['~'])
     #     return sequence
     #
-    # print(text2seq(clean_phone))
-    g2p = G2p()
-    phonemes = g2p("hi hello")
-    print(phonemes)
+    print(text2seq(clean_phone))
+    # g2p = G2p()
+    # phonemes = g2p("hi hello")
+    # print(phonemes)

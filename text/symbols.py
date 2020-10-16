@@ -17,7 +17,8 @@ _characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 _arpabet = ['@' + s for s in cmudict.valid_symbols]
 
 # Export all symbols:
-en_symbols = [_pad, _sos, _eos] + list(_punctuations) + list(_characters) + _arpabet
+en_symbols = [_pad, _sos, _eos] + list(_punctuations) + list(_characters)
+en_phone_symbols = [_pad, _sos, _eos] + list(_punctuations) + _arpabet
 symbols = ALL_SYMBOLS
 
 if __name__=="__main__":
